@@ -6,6 +6,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -28,6 +29,11 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
     lateinit var placeModelButton: ExtendedFloatingActionButton
     lateinit var newModelButton: ExtendedFloatingActionButton
 
+
+
+    lateinit var placeChairButton: Button
+    lateinit var placeSpoonButton: Button
+
     data class Model(
         val fileLocation: String,
         val scaleUnits: Float? = null,
@@ -36,35 +42,12 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
     )
 
     val models = listOf(
-        Model("models/spiderbot.glb"),
-        Model(
-            fileLocation = "https://storage.googleapis.com/ar-answers-in-search-models/static/Tiger/model.glb",
-            // Display the Tiger with a size of 3 m long
-            scaleUnits = 2.5f,
-            placementMode = PlacementMode.BEST_AVAILABLE,
-            applyPoseRotation = false
-        ),
-        Model(
-            fileLocation = "https://sceneview.github.io/assets/models/DamagedHelmet.glb",
-            placementMode = PlacementMode.INSTANT,
-            scaleUnits = 0.5f
-        ),
-        Model(
-            fileLocation = "https://storage.googleapis.com/ar-answers-in-search-models/static/GiantPanda/model.glb",
-            placementMode = PlacementMode.PLANE_HORIZONTAL,
-            // Display the Tiger with a size of 1.5 m height
-            scaleUnits = 1.5f
-        ),
+        Model("chair.glb"),
         Model(
             fileLocation = "https://sceneview.github.io/assets/models/Spoons.glb",
             placementMode = PlacementMode.PLANE_HORIZONTAL_AND_VERTICAL,
             // Keep original model size
             scaleUnits = null
-        ),
-        Model(
-            fileLocation = "https://sceneview.github.io/assets/models/Halloween.glb",
-            placementMode = PlacementMode.PLANE_HORIZONTAL,
-            scaleUnits = 2.5f
         ),
     )
     var modelIndex = 0
@@ -101,25 +84,53 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         }
         loadingView = findViewById(R.id.loadingView)
         newModelButton = findViewById<ExtendedFloatingActionButton>(R.id.newModelButton).apply {
-            // Add system bar margins
-            val bottomMargin = (layoutParams as ViewGroup.MarginLayoutParams).bottomMargin
-            doOnApplyWindowInsets { systemBarsInsets ->
-                (layoutParams as ViewGroup.MarginLayoutParams).bottomMargin =
-                    systemBarsInsets.bottom + bottomMargin
-            }
+
             setOnClickListener { newModelNode() }
         }
         placeModelButton = findViewById<ExtendedFloatingActionButton>(R.id.placeModelButton).apply {
             setOnClickListener { placeModelNode() }
         }
 
-        newModelNode()
+
+        placeChairButton = findViewById<Button>(R.id.chairButton).apply {
+            setOnClickListener { placeChair() }
+        }
+
+
+
+        placeSpoonButton = findViewById<Button>(R.id.spoonButton).apply {
+            setOnClickListener { placeSpoon() }
+        }
+
+
+
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.activity_main, menu)
         return super.onCreateOptionsMenu(menu)
     }
+
+    var placeOption = 0
+
+
+    fun placeChair() {
+
+        placeOption = 0;
+
+        newModelNode()
+    }
+
+
+    fun placeSpoon() {
+
+        placeOption = 1;
+
+        newModelNode()
+    }
+
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         item.isChecked = !item.isChecked
@@ -146,8 +157,8 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
             sceneView.removeChild(it)
             it.destroy()
         }
-        val model = models[modelIndex]
-        modelIndex = (modelIndex + 1) % models.size
+        val model = models[placeOption]
+
         modelNode = ArModelNode(model.placementMode).apply {
             applyPoseRotation = model.applyPoseRotation
             loadModelGlbAsync(
