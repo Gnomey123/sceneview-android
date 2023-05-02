@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">goingkoth</string>
     <string name="place_object">Place object</string>
-    <string name="new_object">Delete All Objects</string>
+    <string name="new_object">Delete Selected Object</string>
     <string name="instant_placement">Instant Placement</string>
     <string name="depth_placement">Depth Placement</string>
     <string name="plane_placement">Plane Placement</string>

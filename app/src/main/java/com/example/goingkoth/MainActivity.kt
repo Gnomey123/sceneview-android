@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isGone
@@ -17,6 +18,7 @@ import io.github.sceneview.ar.ArSceneView
 import io.github.sceneview.ar.getDescription
 import io.github.sceneview.ar.node.ArModelNode
 import io.github.sceneview.ar.node.PlacementMode
+import io.github.sceneview.gesture.GestureDetector
 import io.github.sceneview.math.Position
 import io.github.sceneview.utils.doOnApplyWindowInsets
 import io.github.sceneview.utils.setFullScreen
@@ -85,7 +87,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         loadingView = findViewById(R.id.loadingView)
         deleteAllObjectsButton = findViewById<ExtendedFloatingActionButton>(R.id.deleteObjects).apply {
 
-            setOnClickListener { deleteArObjects() }
+            setOnClickListener { deleteArObject() }
         }
         placeModelButton = findViewById<ExtendedFloatingActionButton>(R.id.placeModelButton).apply {
             setOnClickListener { placeModelNode() }
@@ -106,6 +108,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
 
     }
+    var gestureDetector: GestureDetector.SimpleOnGestureListener = GestureDetector.SimpleOnGestureListener()
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.activity_main, menu)
@@ -183,9 +186,11 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
 
 
+
+
         }
 
-        modelList.add(modelNode!!);
+
 
         sceneView.addChild(modelNode!!)
         // Select the model node by default (the model node is also selected on tap)
@@ -200,14 +205,22 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
     }
 
-    fun deleteArObjects()
+
+
+
+
+    fun deleteArObject()
     {
-        for (m in modelList)
+
+
+        if(sceneView.selectedNode == null)
         {
-            sceneView.removeChild(m!!);
+            val toast = Toast.makeText(applicationContext, "Can't delete, no objects selected", Toast.LENGTH_SHORT)
+            toast.show()
+            return
         }
 
-        modelList.clear();
+        sceneView.removeChild(sceneView.selectedNode!!)
 
     }
 
