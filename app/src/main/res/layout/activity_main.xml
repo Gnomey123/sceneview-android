@@ -17,7 +17,8 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/deleteObjects"
@@ -168,5 +169,30 @@
         </HorizontalScrollView>
 
     </LinearLayout>
+
+    <SeekBar
+        android:id="@+id/rotateSeekBar"
+        android:layout_width="100dp"
+        android:layout_height="0dp"
+        android:rotation="270"
+        app:layout_constraintEnd_toEndOf="@id/seekGuideVert"
+        app:layout_constraintStart_toStartOf="@id/seekGuideVert"
+        app:layout_constraintTop_toBottomOf="@id/seekGuideHorz" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/seekGuideVert"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.95" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/seekGuideHorz"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintGuide_percent="0.50"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

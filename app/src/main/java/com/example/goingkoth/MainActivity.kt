@@ -7,6 +7,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -20,6 +21,7 @@ import io.github.sceneview.ar.node.ArModelNode
 import io.github.sceneview.ar.node.PlacementMode
 import io.github.sceneview.gesture.GestureDetector
 import io.github.sceneview.math.Position
+import io.github.sceneview.math.Rotation
 import io.github.sceneview.utils.doOnApplyWindowInsets
 import io.github.sceneview.utils.setFullScreen
 
@@ -31,7 +33,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
     lateinit var placeModelButton: ExtendedFloatingActionButton
     lateinit var deleteAllObjectsButton: ExtendedFloatingActionButton
 
-
+    lateinit var rotateSeekBar: SeekBar
 
     lateinit var placeChairButton: Button
     lateinit var placeSpoonButton: Button
@@ -106,6 +108,59 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
 
 
+
+        //code to make rotateSeekBar as tall as the AR view fragment
+        rotateSeekBar = findViewById<SeekBar>(R.id.rotateSeekBar)
+
+        sceneView.addOnLayoutChangeListener{ _, _, top, _, bottom, _, _, _, _ ->
+            rotateSeekBar.layoutParams.width = ((bottom - top) * 0.8).toInt();
+            sceneView.requestLayout();
+        }
+
+        rotateSeekBar.layoutParams.width = ((sceneView.bottom - sceneView.top) * 0.8).toInt();
+        sceneView.requestLayout();
+
+
+
+
+
+
+        rotateSeekBar?.max = 360;
+
+        rotateSeekBar.min = 0;
+
+
+
+
+        rotateSeekBar?.setOnSeekBarChangeListener(object :
+            SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(rotateSeekBar: SeekBar,
+                                           progress: Int, fromUser: Boolean) {
+                // write custom code for progress is changed
+            }
+
+            override fun onStartTrackingTouch(rotateSeekBar: SeekBar) {
+                // write custom code for progress is started
+            }
+
+            override fun onStopTrackingTouch(rotateSeekBar: SeekBar) {
+                // write custom code for progress is stopped
+                if(sceneView.selectedNode != null)  //only rotate if we've selected something
+                {
+
+                    var rotateVal = rotateSeekBar.progress
+
+
+                    sceneView.selectedNode?.apply {
+
+                        transform(rotation = Rotation(y = rotateVal.toFloat()))
+
+                    }
+
+                }
+
+            }
+        })
 
     }
     var gestureDetector: GestureDetector.SimpleOnGestureListener = GestureDetector.SimpleOnGestureListener()
