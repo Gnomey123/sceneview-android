@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
     lateinit var loadingView: View
     lateinit var statusText: TextView
     lateinit var placeModelButton: ExtendedFloatingActionButton
-    lateinit var newModelButton: ExtendedFloatingActionButton
+    lateinit var deleteAllObjectsButton: ExtendedFloatingActionButton
 
 
 
@@ -83,9 +83,9 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
             }
         }
         loadingView = findViewById(R.id.loadingView)
-        newModelButton = findViewById<ExtendedFloatingActionButton>(R.id.newModelButton).apply {
+        deleteAllObjectsButton = findViewById<ExtendedFloatingActionButton>(R.id.deleteObjects).apply {
 
-            setOnClickListener { newModelNode() }
+            setOnClickListener { deleteArObjects() }
         }
         placeModelButton = findViewById<ExtendedFloatingActionButton>(R.id.placeModelButton).apply {
             setOnClickListener { placeModelNode() }
@@ -150,6 +150,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         placeModelButton.isVisible = false
         sceneView.planeRenderer.isVisible = false
     }
+    var modelList = mutableListOf<ArModelNode>()
 
     fun newModelNode() {
         isLoading = true
@@ -177,9 +178,36 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
             onHitResult = { node, _ ->
                 placeModelButton.isGone = !node.isTracking
             }
+
+
+
         }
+
+        modelList.add(modelNode!!);
+
         sceneView.addChild(modelNode!!)
         // Select the model node by default (the model node is also selected on tap)
         sceneView.selectedNode = modelNode
+
+
+
+
+
+
+
+
     }
+
+    fun deleteArObjects()
+    {
+        for (m in modelList)
+        {
+            sceneView.removeChild(m!!);
+        }
+
+        modelList.clear();
+
+    }
+
+
 }
