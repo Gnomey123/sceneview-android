@@ -175,6 +175,8 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
             onAnchorChanged = { anchor ->
                 placeModelButton.isGone = anchor != null
             }
+
+
             onHitResult = { node, _ ->
                 placeModelButton.isGone = !node.isTracking
             }
