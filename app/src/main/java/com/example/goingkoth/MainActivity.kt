@@ -15,11 +15,11 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+import com.google.ar.core.Anchor
 import io.github.sceneview.ar.ArSceneView
 import io.github.sceneview.ar.getDescription
 import io.github.sceneview.ar.node.ArModelNode
 import io.github.sceneview.ar.node.PlacementMode
-import io.github.sceneview.gesture.GestureDetector
 import io.github.sceneview.math.Position
 import io.github.sceneview.math.Rotation
 import io.github.sceneview.utils.doOnApplyWindowInsets
@@ -162,8 +162,28 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
             }
         })
 
+
+
+
+
+        //  cloud api enabling stuff here
+        sceneView.cloudAnchorEnabled = true
+
+
+
+
+
     }
-    var gestureDetector: GestureDetector.SimpleOnGestureListener = GestureDetector.SimpleOnGestureListener()
+
+
+
+
+
+
+
+
+
+
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.activity_main, menu)
@@ -207,6 +227,22 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         modelNode?.anchor()
         placeModelButton.isVisible = false
         sceneView.planeRenderer.isVisible = false
+
+
+        //when user places a node, start up cloud anker syncing
+        // Host/Record a Cloud Anchor
+        modelNode?.onAnchorChanged = { anchor: Anchor? ->
+            if(anchor != null) {
+                modelNode?.hostCloudAnchor { anchor: Anchor, success: Boolean ->
+                    if (success) {
+                        // Save the hosted Cloud Anchor Id
+                        val cloudAnchorId = anchor.cloudAnchorId
+                    }
+                }
+            }
+        }
+
+
     }
     var modelList = mutableListOf<ArModelNode>()
 
@@ -219,7 +255,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         val model = models[placeOption]
 
         modelNode = ArModelNode(model.placementMode).apply {
-            applyPoseRotation = model.applyPoseRotation
+            //applyPoseRotation = model.applyPoseRotation
             loadModelGlbAsync(
                 glbFileLocation = model.fileLocation,
                 autoAnimate = true,
