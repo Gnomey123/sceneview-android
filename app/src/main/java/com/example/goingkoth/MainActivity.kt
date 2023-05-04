@@ -1,5 +1,4 @@
-package com.example.goingkoth
-
+package com.SBUproject.ArRoomDesigner
 
 import android.os.Bundle
 import android.view.Menu
@@ -16,7 +15,9 @@ import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.ar.core.Anchor
+import com.google.ar.core.Config
 import io.github.sceneview.ar.ArSceneView
+import io.github.sceneview.ar.arcore.ArSession
 import io.github.sceneview.ar.getDescription
 import io.github.sceneview.ar.node.ArModelNode
 import io.github.sceneview.ar.node.PlacementMode
@@ -86,6 +87,15 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
                 statusText.isGone = reason == null
             }
         }
+
+
+        sceneView.configureSession { _: ArSession, config: Config ->
+            config.cloudAnchorMode = Config.CloudAnchorMode.ENABLED
+
+
+        }
+
+
         loadingView = findViewById(R.id.loadingView)
         deleteAllObjectsButton = findViewById<ExtendedFloatingActionButton>(R.id.deleteObjects).apply {
 
